@@ -11,7 +11,6 @@ class Librator {
 
 	public function __construct($filename)
 	{
-		var_dump($_GET);
 		$this->filename = $filename;
 	}
 
@@ -26,12 +25,10 @@ class Librator {
 		$break = $this->getBreak();
 
 		$page = $this->currentPage();
-		$start = ($page * $limit);
-
-	var_dump($start);
+		$start = $page * $limit;
 
 		if (isset($file[$start])) {
-			for($i = $start; $i < $limit; $i++) {
+			for($i = $start; $i < $start + $limit; $i++) {
 				echo $file[$i].$break;
 			}
 		} else {
