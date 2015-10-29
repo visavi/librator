@@ -31,6 +31,7 @@ class Librator {
 			for($i = $start; $i < $start + $limit; $i++) {
 				echo $file[$i].$break;
 			}
+			$this->pagination();
 		} else {
 			echo 'Данной страницы не существует!';
 		}
@@ -57,6 +58,18 @@ class Librator {
 	public function currentPage()
 	{
 		return !empty($_GET['page']) ? abs(intval($_GET['page'])) : 0;
+	}
+
+	public function pagination()
+	{
+		$page = $this->currentPage();
+
+		if ($page > 0) {
+			echo '&laquo; <a href="?page='.($page - 1).'">Предыдущая страница</a>';
+		}
+
+		//if ($page * $limit < count(file($this->filename)))
+		echo '<a href="?page='.($page + 1).'">Следующая страница</a> &raquo;';
 	}
 
 }
