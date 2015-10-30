@@ -1,9 +1,9 @@
 # Class text library to read and process text from a file by pages
 
-[![Latest Stable Version](https://poser.pugx.org/visavi/flystring/v/stable)](https://packagist.org/packages/visavi/flystring)
-[![Total Downloads](https://poser.pugx.org/visavi/flystring/downloads)](https://packagist.org/packages/visavi/flystring)
-[![Latest Unstable Version](https://poser.pugx.org/visavi/flystring/v/unstable)](https://packagist.org/packages/visavi/flystring)
-[![License](https://poser.pugx.org/visavi/flystring/license)](https://packagist.org/packages/visavi/flystring)
+[![Latest Stable Version](https://poser.pugx.org/visavi/librator/v/stable)](https://packagist.org/packages/visavi/librator)
+[![Total Downloads](https://poser.pugx.org/visavi/librator/downloads)](https://packagist.org/packages/visavi/librator)
+[![Latest Unstable Version](https://poser.pugx.org/visavi/librator/v/unstable)](https://packagist.org/packages/visavi/librator)
+[![License](https://poser.pugx.org/visavi/librator/license)](https://packagist.org/packages/visavi/librator)
 
 Basic useful feature list:
 
