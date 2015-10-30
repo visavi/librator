@@ -1,0 +1,22 @@
+{
+	"name": "visavi/flystring",
+	"description": "Class text library to read and process text from a file by pages",
+	"homepage": "http://visavi.net",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Alexander Grigorev",
+			"email": "visavi.net@mail.ru",
+			"homepage": "http://visavi.net"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"minimum-stability": "stable",
+	"autoload": {
+		"psr-4": {
+			"Visavi\\": "src/"
+		}
+	}
+}
