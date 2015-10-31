@@ -12,12 +12,30 @@ namespace Visavi;
 
 class Librator {
 
-	public $filename;
 	public $break = '<br />';
+	public static $filename;
+	private static $_file = null;
 
 	public function __construct($filename)
 	{
-		$this->filename = $filename;
+		self::$filename = $filename;
+	}
+
+	/**
+	 * Получение данных файла
+	 * @return array массив строк
+	 */
+	public static function file()
+	{
+		if (is_null(self::$_file)) {
+			if (file_exists(self::$filename)) {
+				self::$_file = file(self::$filename);
+			} else {
+				self::$_file = ['Файл не найден!'];
+			}
+		}
+
+		return 	self::$_file;
 	}
 
 	/**
@@ -25,9 +43,10 @@ class Librator {
 	 * @param  int $limit Количество строк на страницу
 	 * @return string текст разбитый по страницам
 	 */
-	public function read($limit)
+	public function read($limit, $separator = 'lines' /* words letters */)
 	{
-		$file = file($this->filename);
+		$strings = [];
+		$file = self::file();
 		$break = $this->getBreak();
 
 		$page = $this->currentPage();
@@ -35,7 +54,9 @@ class Librator {
 
 		if (isset($file[$start])) {
 			for($i = $start; $i < $start + $limit; $i++) {
-				echo $file[$i].$break;
+				if (isset($file[$i])) {
+					$strings[] = $file[$i].$break;
+				}
 			}
 
 			$page = [];
@@ -43,9 +64,9 @@ class Librator {
 			$page['total'] = count($file);
 			$page['current'] = $this->currentPage();
 
-			self::pagination($page);
+			return implode($strings).self::pagination($page);
 		} else {
-			echo 'Данной страницы не существует!';
+			return 'Данной страницы не существует!';
 		}
 	}
 
@@ -65,6 +86,15 @@ class Librator {
 	public function getBreak()
 	{
 		return $this->break;
+	}
+
+	/**
+	 * Получение название из 1 строки
+	 */
+	public function getTitle()
+	{
+		$file = self::file();
+		return current($file);
 	}
 
 	/**
@@ -146,7 +176,18 @@ class Librator {
 				];
 			}
 
-			include_once('pagination.php');
+			return self::render('pagination', compact('pages'));
 		}
+	}
+
+
+	public static function render($view, $params = []){
+
+		extract($params);
+		ob_start();
+
+		include ($view.'.php');
+
+		return ob_get_clean();
 	}
 }
