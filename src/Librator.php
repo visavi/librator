@@ -22,21 +22,6 @@ class Librator {
 	}
 
 	/**
-	 * Получение данных файла
-	 * @return array массив строк
-	 */
-	public static function file()
-	{
-		if (is_null(self::$_file)) {
-			if (file_exists(self::$filename)) {
-				self::$_file = file_get_contents(self::$filename);
-			}
-		}
-
-		return 	self::$_file;
-	}
-
-	/**
 	 * Чтение и разбивка текста по страницам
 	 * @param  integer $limit     Количество строк на страницу
 	 * @param  string  $separator Разделитель lines, words или chars
@@ -96,6 +81,21 @@ class Librator {
 	public function currentPage()
 	{
 		return !empty($_GET['page']) ? abs(intval($_GET['page'])) : 1;
+	}
+
+	/**
+	 * Получение данных файла
+	 * @return array массив строк
+	 */
+	protected static function file()
+	{
+		if (is_null(self::$_file)) {
+			if (file_exists(self::$filename)) {
+				self::$_file = file_get_contents(self::$filename);
+			}
+		}
+
+		return 	self::$_file;
 	}
 
 	/**
