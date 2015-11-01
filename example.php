@@ -1,7 +1,7 @@
 <?php
 	include 'src/Librator.php';
-	$librator = new Visavi\Librator('library.txt');
-	$librator->setBreak('<br>');
+	$librator = new Visavi\Librator('Подумать только.txt');
+	$librator->setBreak(false);
 	$text = $librator->read(20, 'lines');
 	$page = $librator->currentPage();
 	$title = $librator->getTitle();

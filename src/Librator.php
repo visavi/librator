@@ -21,6 +21,42 @@ class Librator {
 		self::$filename = $filename;
 	}
 
+
+	protected function explode($text, $line_length){
+		$line_arr = array();
+		$text_ar = explode(' ', $text);
+		$string = $text_ar[0];
+		$text_ar_so = count($text_ar);
+
+		for($i=1;$i<$text_ar_so;$i++){
+			$string_test = $string.' '.$text_ar[$i];
+
+			if(mb_strlen($string_test) > $line_length) {
+				$line_arr[] = $string;
+				$string = $text_ar[$i];
+			}
+			else $string = $string_test;
+		}
+		$line_arr[] = $string;
+		return $line_arr;
+	}
+
+	protected function explode2($text, $words){
+/*		$array_words = [];
+		$text = explode(' ', $text);
+		$count_words = count($text);
+
+
+		for ($i=0; $i<$count_words; $i++){
+
+			if
+		}
+
+		$line_arr[] = $string;
+		return $line_arr;*/
+	}
+
+
 	/**
 	 * Получение данных файла
 	 * @return array массив строк
@@ -43,11 +79,18 @@ class Librator {
 	 * @param  int $limit Количество строк на страницу
 	 * @return string текст разбитый по страницам
 	 */
-	public function read($limit, $separator = 'lines' /* words letters */)
+	public function read($limit, $separator = 'lines' /* words */)
 	{
 		$strings = [];
 		$file = self::file();
+
 		$break = $this->getBreak();
+
+/*		$file = file_get_contents(self::$filename);
+		$limit = 1;
+		$file = $this->explode($file, 1000);*/
+
+
 
 		$page = $this->currentPage();
 		$start = $page * $limit - $limit;
@@ -55,7 +98,7 @@ class Librator {
 		if (isset($file[$start])) {
 			for($i = $start; $i < $start + $limit; $i++) {
 				if (isset($file[$i])) {
-					$strings[] = $file[$i].$break;
+					$strings[] = nl2br($file[$i], $break);
 				}
 			}
 
@@ -89,12 +132,13 @@ class Librator {
 	}
 
 	/**
-	 * Получение название из 1 строки
+	 * Получение название файла
 	 */
 	public function getTitle()
 	{
-		$file = self::file();
-		return current($file);
+		$file = self::$filename;
+
+		return substr($file, 0, strrpos($file, '.'));;
 	}
 
 	/**
@@ -180,7 +224,12 @@ class Librator {
 		}
 	}
 
-
+	/**
+	 * Вывод шаблона
+	 * @param  string $view   имя шаблона
+	 * @param  array  $params массив переменных
+	 * @return string         сформированный шаблон
+	 */
 	public static function render($view, $params = []){
 
 		extract($params);
