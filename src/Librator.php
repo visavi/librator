@@ -21,39 +21,52 @@ class Librator {
 		self::$filename = $filename;
 	}
 
+	/**
+	 * Разбивает файл на массив с учетом кол. символов
+	 * @param  string  $text  текст
+	 * @param  integer $chars кол. символов
+	 * @return array          массив строк
+	 */
+	protected function explodeChars($text, $chars)
+	{
+		$lines = [];
+		$string = '';
+		$text = explode(' ', $text);
+		$count_chars = count($text);
 
-	protected function explode($text, $line_length){
-		$line_arr = array();
-		$text_ar = explode(' ', $text);
-		$string = $text_ar[0];
-		$text_ar_so = count($text_ar);
+		for ($i = 0; $i < $count_chars; $i++){
+			$string .= $text[$i].' ';
 
-		for($i=1;$i<$text_ar_so;$i++){
-			$string_test = $string.' '.$text_ar[$i];
-
-			if(mb_strlen($string_test) > $line_length) {
-				$line_arr[] = $string;
-				$string = $text_ar[$i];
+			if (mb_strlen($string) > $chars) {
+				$lines[] = $string;
+				$string = '';
 			}
-			else $string = $string_test;
 		}
-		$line_arr[] = $string;
-		return $line_arr;
+		return $lines;
 	}
 
-	protected function explode2($text, $words){
-/*		$array_words = [];
+	/**
+	 * Разбивает файл на массив с учетом кол. слов
+	 * @param  string  $text  текст
+	 * @param  integer $words кол. слов
+	 * @return array          массив строк
+	 */
+	protected function explodeWords($text, $words)
+	{
+		$lines = [];
+		$array_words = [];
 		$text = explode(' ', $text);
 		$count_words = count($text);
 
+		for ($i = 0; $i < $count_words; $i++){
+			$array_words[] = $text[$i];
 
-		for ($i=0; $i<$count_words; $i++){
-
-			if
+			if (count($array_words) > $words) {
+				$lines[] = implode(' ', $array_words);
+				$array_words = [];
+			}
 		}
-
-		$line_arr[] = $string;
-		return $line_arr;*/
+		return $lines;
 	}
 
 
@@ -65,9 +78,7 @@ class Librator {
 	{
 		if (is_null(self::$_file)) {
 			if (file_exists(self::$filename)) {
-				self::$_file = file(self::$filename);
-			} else {
-				self::$_file = ['Файл не найден!'];
+				self::$_file = file_get_contents(self::$filename);
 			}
 		}
 
@@ -76,59 +87,45 @@ class Librator {
 
 	/**
 	 * Чтение и разбивка текста по страницам
-	 * @param  int $limit Количество строк на страницу
-	 * @return string текст разбитый по страницам
+	 * @param  integer $limit     Количество строк на страницу
+	 * @param  string  $separator Разделитель lines, words или chars
+	 * @return string             Текст разбитый по страницам
 	 */
-	public function read($limit, $separator = 'lines' /* words */)
+	public function read($limit, $separator = 'lines')
 	{
 		$strings = [];
 		$file = self::file();
 
-		$break = $this->getBreak();
+		if (!$file) return 'Файл не найден!';
 
-/*		$file = file_get_contents(self::$filename);
-		$limit = 1;
-		$file = $this->explode($file, 1000);*/
+		if ($separator == 'words') {
 
+			$file = $this->explodeWords($file, $limit);
+			$limit = 1;
 
+		} elseif ($separator == 'chars') {
+
+			$file = $this->explodeChars($file, $limit);
+			$limit = 1;
+
+		} else {
+			$file = explode("\n", $file);
+		}
 
 		$page = $this->currentPage();
 		$start = $page * $limit - $limit;
 
-		if (isset($file[$start])) {
-			for($i = $start; $i < $start + $limit; $i++) {
-				if (isset($file[$i])) {
-					$strings[] = nl2br($file[$i], $break);
-				}
+		if (!isset($file[$start])) return 'Данной страницы не существует!';
+
+		for($i = $start; $i < $start + $limit; $i++) {
+			if (isset($file[$i])) {
+				$strings[] = nl2br($file[$i]);
 			}
-
-			$page = [];
-			$page['limit'] = $limit;
-			$page['total'] = count($file);
-			$page['current'] = $this->currentPage();
-
-			return implode($strings).self::pagination($page);
-		} else {
-			return 'Данной страницы не существует!';
 		}
-	}
 
-	/**
-	 * Установка разделителя строк
-	 * @param string $break разделитель строк
-	 */
-	public function setBreak($break)
-	{
-		$this->break = $break;
-	}
+		$page = ['limit' => $limit, 'total' => count($file), 'current' => $this->currentPage()];
 
-	/**
-	 * Получить разделитель строк
-	 * @return string разделитель строк
-	 */
-	public function getBreak()
-	{
-		return $this->break;
+		return implode($strings).self::pagination($page);
 	}
 
 	/**
@@ -138,7 +135,7 @@ class Librator {
 	{
 		$file = self::$filename;
 
-		return substr($file, 0, strrpos($file, '.'));;
+		return substr($file, 0, strrpos($file, '.'));
 	}
 
 	/**
@@ -152,8 +149,8 @@ class Librator {
 
 	/**
 	 * Постраничная навигация
-	 * @param  array $page массив данных
-	 * @return string  сформированный блок с кнопками страниц
+	 * @param  array $page Массив данных
+	 * @return string      Сформированный блок с кнопками страниц
 	 */
 	public static function pagination($page)
 	{
@@ -226,12 +223,12 @@ class Librator {
 
 	/**
 	 * Вывод шаблона
-	 * @param  string $view   имя шаблона
-	 * @param  array  $params массив переменных
-	 * @return string         сформированный шаблон
+	 * @param  string $view   Имя шаблона
+	 * @param  array  $params Массив переменных
+	 * @return string         Сформированный шаблон
 	 */
-	public static function render($view, $params = []){
-
+	public static function render($view, $params = [])
+	{
 		extract($params);
 		ob_start();
 

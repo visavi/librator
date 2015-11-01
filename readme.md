@@ -15,14 +15,26 @@ Basic useful feature list:
 
 ```php
 <?php
+// Connect class
+include 'src/Librator.php';
+
 // Open the text file library.txt
 $librator = new Visavi\Librator('library.txt');
 
-// The tag line feed, the default <br /> (optional)
-$librator->setBreak('<br>');
-
 // The number of output lines
 $librator->read(20);
+
+// Or split the file by the number of words
+$librator->read(300, 'words');
+
+// Or split the file by the number of characters
+$librator->read(2000, 'chars');
+
+// Get current page
+$librator->currentPage();
+
+// Get the header is formed from file name without the extension
+$librator->getTitle();
 ```
 
 ### Installing

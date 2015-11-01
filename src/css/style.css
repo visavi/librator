@@ -62,3 +62,7 @@
   background-color: #fff;
   border-color: #ddd;
 }
+.current-page {
+  font-size: 18px;
+  color: #f00;
+}
