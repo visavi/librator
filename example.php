@@ -1,9 +1,9 @@
 <?php
 	include 'src/Librator.php';
 	$librator = new Visavi\Librator('Подумать только.txt');
-	//$text = $librator->read(20);
+	$text = $librator->read(20);
 	//$text = $librator->read(2000, 'chars');
-	$text = $librator->read(300, 'words');
+	//$text = $librator->read(300, 'words');
 	$page = $librator->currentPage();
 	$title = $librator->getTitle();
 ?>

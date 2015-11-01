@@ -22,55 +22,6 @@ class Librator {
 	}
 
 	/**
-	 * Разбивает файл на массив с учетом кол. символов
-	 * @param  string  $text  текст
-	 * @param  integer $chars кол. символов
-	 * @return array          массив строк
-	 */
-	protected function explodeChars($text, $chars)
-	{
-		$lines = [];
-		$string = '';
-		$text = explode(' ', $text);
-		$count_chars = count($text);
-
-		for ($i = 0; $i < $count_chars; $i++){
-			$string .= $text[$i].' ';
-
-			if (mb_strlen($string) > $chars) {
-				$lines[] = $string;
-				$string = '';
-			}
-		}
-		return $lines;
-	}
-
-	/**
-	 * Разбивает файл на массив с учетом кол. слов
-	 * @param  string  $text  текст
-	 * @param  integer $words кол. слов
-	 * @return array          массив строк
-	 */
-	protected function explodeWords($text, $words)
-	{
-		$lines = [];
-		$array_words = [];
-		$text = explode(' ', $text);
-		$count_words = count($text);
-
-		for ($i = 0; $i < $count_words; $i++){
-			$array_words[] = $text[$i];
-
-			if (count($array_words) > $words) {
-				$lines[] = implode(' ', $array_words);
-				$array_words = [];
-			}
-		}
-		return $lines;
-	}
-
-
-	/**
 	 * Получение данных файла
 	 * @return array массив строк
 	 */
@@ -152,7 +103,7 @@ class Librator {
 	 * @param  array $page Массив данных
 	 * @return string      Сформированный блок с кнопками страниц
 	 */
-	public static function pagination($page)
+	protected static function pagination($page)
 	{
 		if ($page['total'] > 0) {
 			if (empty($page['crumbs'])) $page['crumbs'] = 3;
@@ -222,12 +173,60 @@ class Librator {
 	}
 
 	/**
+	 * Разбивает файл на массив с учетом кол. символов
+	 * @param  string  $text  текст
+	 * @param  integer $chars кол. символов
+	 * @return array          массив строк
+	 */
+	protected function explodeChars($text, $chars)
+	{
+		$lines = [];
+		$string = '';
+		$text = explode(' ', $text);
+		$count_chars = count($text);
+
+		for ($i = 0; $i < $count_chars; $i++){
+			$string .= $text[$i].' ';
+
+			if (mb_strlen($string) > $chars) {
+				$lines[] = $string;
+				$string = '';
+			}
+		}
+		return $lines;
+	}
+
+	/**
+	 * Разбивает файл на массив с учетом кол. слов
+	 * @param  string  $text  текст
+	 * @param  integer $words кол. слов
+	 * @return array          массив строк
+	 */
+	protected function explodeWords($text, $words)
+	{
+		$lines = [];
+		$array_words = [];
+		$text = explode(' ', $text);
+		$count_words = count($text);
+
+		for ($i = 0; $i < $count_words; $i++){
+			$array_words[] = $text[$i];
+
+			if (count($array_words) > $words) {
+				$lines[] = implode(' ', $array_words);
+				$array_words = [];
+			}
+		}
+		return $lines;
+	}
+
+	/**
 	 * Вывод шаблона
 	 * @param  string $view   Имя шаблона
 	 * @param  array  $params Массив переменных
 	 * @return string         Сформированный шаблон
 	 */
-	public static function render($view, $params = [])
+	protected static function render($view, $params = [])
 	{
 		extract($params);
 		ob_start();
