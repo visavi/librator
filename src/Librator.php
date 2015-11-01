@@ -14,7 +14,7 @@ class Librator {
 
 	public $break = '<br />';
 	public static $filename;
-	private static $_file = null;
+	protected static $_file = null;
 
 	public function __construct($filename)
 	{
