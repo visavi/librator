@@ -32,7 +32,7 @@ class Librator {
 		$strings = [];
 		$file = self::file();
 
-		if (!$file) return 'Файл не найден!';
+		if (! $file) return 'Файл не найден!';
 
 		if ($separator == 'words') {
 
@@ -51,7 +51,7 @@ class Librator {
 		$page = $this->currentPage();
 		$start = $page * $limit - $limit;
 
-		if (!isset($file[$start])) return 'Данной страницы не существует!';
+		if (! isset($file[$start])) return 'Данной страницы не существует!';
 
 		for($i = $start; $i < $start + $limit; $i++) {
 			if (isset($file[$i])) {
@@ -80,7 +80,7 @@ class Librator {
 	 */
 	public function currentPage()
 	{
-		return !empty($_GET['page']) ? abs(intval($_GET['page'])) : 1;
+		return ! empty($_GET['page']) ? abs(intval($_GET['page'])) : 1;
 	}
 
 	/**
