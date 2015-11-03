@@ -29,10 +29,8 @@ class Librator {
 	 */
 	public function read($limit, $separator = 'lines')
 	{
+		$file = $this->prepareFile();
 		$strings = [];
-		$file = self::file();
-
-		if (! $file) return 'Файл не найден!';
 
 		if ($separator == 'words') {
 
@@ -69,9 +67,7 @@ class Librator {
 	 */
 	public function getTitle()
 	{
-		$file = self::$filename;
-
-		return substr($file, 0, strrpos($file, '.'));
+		return current(explode("\n", self::file()));
 	}
 
 	/**
@@ -170,6 +166,25 @@ class Librator {
 
 			return self::render('pagination', compact('pages'));
 		}
+	}
+
+	/**
+	 * Проверка и подготовка файла, удаление заголовка
+	 * @return string текст
+	 */
+	protected static function prepareFile()
+	{
+		$file = self::file();
+
+		if (! $file) return 'Файл не найден!';
+
+		$lines = explode("\n", $file);
+		if (isset($lines[0]) && isset($lines[1])) {
+			unset($lines[0]);
+			$file = implode("\n", $lines);
+		}
+
+		return $file;
 	}
 
 	/**

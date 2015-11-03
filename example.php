@@ -1,6 +1,6 @@
 <?php
 	include 'src/Librator.php';
-	$librator = new Visavi\Librator('Подумать только.txt');
+	$librator = new Visavi\Librator('library.txt');
 	$text = $librator->read(20);
 	//$text = $librator->read(2000, 'chars');
 	//$text = $librator->read(300, 'words');
