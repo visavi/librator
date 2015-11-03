@@ -36,7 +36,7 @@ $librator->read(2000, 'chars');
 // Get current page
 $librator->currentPage();
 
-// Preparation of the header is formed of one line of text
+// Automatic output of the header text from the first row
 $librator->getTitle();
 ```
 
