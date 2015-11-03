@@ -9,7 +9,10 @@ Basic useful feature list:
 
  * Reading text files
  * A breakdown of the text on page
+ * Splits text based on the number of lines, number of words and characters to choose from
  * Beautiful displays pages, with the ability to jump to the last and first page
+ * Automatic output of the header text from the first row
+ * The output of the current page
 
 ### Example of use
 
@@ -33,7 +36,7 @@ $librator->read(2000, 'chars');
 // Get current page
 $librator->currentPage();
 
-// Get the header is formed from file name without the extension
+// Preparation of the header is formed of one line of text
 $librator->getTitle();
 ```
 

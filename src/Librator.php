@@ -63,7 +63,7 @@ class Librator {
 	}
 
 	/**
-	 * Получение название файла
+	 * Получение заголовка из 1 строки
 	 */
 	public function getTitle()
 	{
