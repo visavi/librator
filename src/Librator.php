@@ -12,7 +12,6 @@ namespace Visavi;
 
 class Librator {
 
-	public $break = '<br />';
 	public static $filename;
 	protected static $_file = null;
 
@@ -29,37 +28,27 @@ class Librator {
 	 */
 	public function read($limit, $separator = 'lines')
 	{
-		$file = $this->prepareFile();
-		$strings = [];
-
-		if ($separator == 'words') {
-
-			$file = $this->explodeWords($file, $limit);
-			$limit = 1;
-
-		} elseif ($separator == 'chars') {
-
-			$file = $this->explodeChars($file, $limit);
-			$limit = 1;
-
-		} else {
-			$file = explode("\n", $file);
-		}
+		$file = $this->prepareFile($limit, $separator);
 
 		$page = $this->currentPage();
+
+		$string = $file[$page - 1];
+
+/*		$page = $this->currentPage();
 		$start = $page * $limit - $limit;
 
 		if (! isset($file[$start])) return 'Данной страницы не существует!';
 
+		var_dump($start);
 		for($i = $start; $i < $start + $limit; $i++) {
 			if (isset($file[$i])) {
 				$strings[] = nl2br($file[$i]);
 			}
-		}
+		}*/
 
-		$page = ['limit' => $limit, 'total' => count($file), 'current' => $this->currentPage()];
+		$page = ['limit' => 1, 'total' => count($file), 'current' => $this->currentPage()];
 
-		return implode($strings).self::pagination($page);
+		return nl2br($string).self::pagination($page);
 	}
 
 	/**
@@ -172,16 +161,39 @@ class Librator {
 	 * Проверка и подготовка файла, удаление заголовка
 	 * @return string текст
 	 */
-	protected static function prepareFile()
+	protected function prepareFile($limit, $separator)
 	{
 		$file = self::file();
 
 		if (! $file) return 'Файл не найден!';
 
-		$lines = explode("\n", $file);
-		if (isset($lines[0]) && isset($lines[1])) {
-			unset($lines[0]);
-			$file = implode("\n", $lines);
+		$file = explode("\n", $file);
+		if (isset($file[0]) && isset($file[1])) {
+			unset($file[0]);
+		}
+		$file = implode("\n", $file);
+
+		if ($separator == 'words') {
+
+			$file = $this->explodeWords($file, $limit);
+
+		} elseif ($separator == 'chars') {
+
+			$file = $this->explodeChars($file, $limit);
+
+		} else {
+
+			$file = $this->explodeLines($file, $limit);
+
+	/*		$page = $this->currentPage();
+			$start = $page * $limit - $limit;
+
+			for ($i = $start; $i < $start + $limit; $i++) {
+				if (isset($file[$i]) && count($strings) < $limit) {
+					$strings[] = $file[$i];
+				}
+			}
+			$file = $strings;*/
 		}
 
 		return $file;
@@ -232,6 +244,26 @@ class Librator {
 				$array_words = [];
 			}
 		}
+		return $lines;
+	}
+
+	protected function explodeLines($text, $limit)
+	{
+		$lines = [];
+		$array_lines = [];
+		$text = explode("\n", $text);
+		$count_lines = count($text);
+
+		for ($i = 0; $i < $count_lines; $i++){
+			$array_lines[] = $text[$i];
+
+			if (count($array_lines) > $limit) {
+				$lines[] = implode(' ', $array_lines);
+				$array_lines = [];
+			}
+		}
+		var_dump($lines);
+
 		return $lines;
 	}
 
