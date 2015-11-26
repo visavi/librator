@@ -220,6 +220,11 @@ class Librator {
 				$string = '';
 			}
 		}
+
+		if (!empty($string)) {
+			$lines[] = $string;
+		}
+
 		return $lines;
 	}
 
@@ -244,6 +249,11 @@ class Librator {
 				$array_words = [];
 			}
 		}
+
+		if (!empty($array_words)) {
+			$lines[] = implode(' ', $array_words);
+		}
+
 		return $lines;
 	}
 
@@ -262,7 +272,10 @@ class Librator {
 				$array_lines = [];
 			}
 		}
-		var_dump($lines);
+
+		if (!empty($array_lines)) {
+			$lines[] = implode(' ', $array_lines);
+		}
 
 		return $lines;
 	}
