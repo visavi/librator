@@ -34,18 +34,6 @@ class Librator {
 
 		$string = $file[$page - 1];
 
-/*		$page = $this->currentPage();
-		$start = $page * $limit - $limit;
-
-		if (! isset($file[$start])) return 'Данной страницы не существует!';
-
-		var_dump($start);
-		for($i = $start; $i < $start + $limit; $i++) {
-			if (isset($file[$i])) {
-				$strings[] = nl2br($file[$i]);
-			}
-		}*/
-
 		$page = ['limit' => 1, 'total' => count($file), 'current' => $this->currentPage()];
 
 		return nl2br($string).self::pagination($page);
@@ -173,108 +161,52 @@ class Librator {
 		}
 		$file = implode("\n", $file);
 
-		if ($separator == 'words') {
-
-			$file = $this->explodeWords($file, $limit);
-
-		} elseif ($separator == 'chars') {
-
-			$file = $this->explodeChars($file, $limit);
-
-		} else {
-
-			$file = $this->explodeLines($file, $limit);
-
-	/*		$page = $this->currentPage();
-			$start = $page * $limit - $limit;
-
-			for ($i = $start; $i < $start + $limit; $i++) {
-				if (isset($file[$i]) && count($strings) < $limit) {
-					$strings[] = $file[$i];
-				}
-			}
-			$file = $strings;*/
-		}
+		$file = $this->explode($file, $limit, $separator);
 
 		return $file;
 	}
 
 	/**
-	 * Разбивает файл на массив с учетом кол. символов
-	 * @param  string  $text  текст
-	 * @param  integer $chars кол. символов
-	 * @return array          массив строк
+	 * Разбивает файл на массив с учетом разделителя
+	 * @param  string  $text      текст
+	 * @param  integer $limit     кол. элементов
+	 * @param  string  $separator разделитель
+	 * @return array              массив строк
 	 */
-	protected function explodeChars($text, $chars)
+	public function explode($text, $limit, $separator)
 	{
 		$lines = [];
+		$array = [];
 		$string = '';
-		$text = explode(' ', $text);
-		$count_chars = count($text);
 
-		for ($i = 0; $i < $count_chars; $i++){
-			$string .= $text[$i].' ';
+		$text = explode($separator == 'lines' ? "\n" : ' ', $text);
+		$count = count($text);
 
-			if (mb_strlen($string) > $chars) {
-				$lines[] = $string;
-				$string = '';
+		for ($i = 0; $i < $count; $i++){
+
+			if ($separator == 'chars') {
+				$string .= $text[$i].' ';
+
+				if (mb_strlen($string) > $limit) {
+					$lines[] = $string;
+					$string = '';
+				}
+			} else {
+				$array[] = $text[$i];
+
+				if (count($array) > $limit) {
+					$lines[] = implode(' ', $array);
+					$array = [];
+				}
 			}
 		}
 
-		if (!empty($string)) {
+		if (! empty($array)) {
+			$lines[] = implode(' ', $array);
+		}
+
+		if (! empty($string)) {
 			$lines[] = $string;
-		}
-
-		return $lines;
-	}
-
-	/**
-	 * Разбивает файл на массив с учетом кол. слов
-	 * @param  string  $text  текст
-	 * @param  integer $words кол. слов
-	 * @return array          массив строк
-	 */
-	protected function explodeWords($text, $words)
-	{
-		$lines = [];
-		$array_words = [];
-		$text = explode(' ', $text);
-		$count_words = count($text);
-
-		for ($i = 0; $i < $count_words; $i++){
-			$array_words[] = $text[$i];
-
-			if (count($array_words) > $words) {
-				$lines[] = implode(' ', $array_words);
-				$array_words = [];
-			}
-		}
-
-		if (!empty($array_words)) {
-			$lines[] = implode(' ', $array_words);
-		}
-
-		return $lines;
-	}
-
-	protected function explodeLines($text, $limit)
-	{
-		$lines = [];
-		$array_lines = [];
-		$text = explode("\n", $text);
-		$count_lines = count($text);
-
-		for ($i = 0; $i < $count_lines; $i++){
-			$array_lines[] = $text[$i];
-
-			if (count($array_lines) > $limit) {
-				$lines[] = implode(' ', $array_lines);
-				$array_lines = [];
-			}
-		}
-
-		if (!empty($array_lines)) {
-			$lines[] = implode(' ', $array_lines);
 		}
 
 		return $lines;
