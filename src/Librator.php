@@ -34,7 +34,7 @@ class Librator {
 
 		$string = $file[$page - 1];
 
-		$page = ['limit' => 1, 'total' => count($file), 'current' => $this->currentPage()];
+		$page = ['total' => count($file), 'current' => $this->currentPage()];
 
 		return nl2br($string).self::pagination($page);
 	}
@@ -82,9 +82,8 @@ class Librator {
 			if (empty($page['crumbs'])) $page['crumbs'] = 3;
 
 			$pages = [];
-			$pg_cnt = ceil($page['total'] / $page['limit']);
 			$idx_fst = max($page['current'] - $page['crumbs'], 1);
-			$idx_lst = min($page['current'] + $page['crumbs'], $pg_cnt);
+			$idx_lst = min($page['current'] + $page['crumbs'], $page['total']);
 
 			if ($page['current'] != 1) {
 				$pages[] = [
@@ -120,20 +119,20 @@ class Librator {
 					];
 				}
 			}
-			if ($page['current'] < $pg_cnt - $page['crumbs']) {
-				if ($page['current'] != $pg_cnt - $page['crumbs'] - 1) {
+			if ($page['current'] < $page['total'] - $page['crumbs']) {
+				if ($page['current'] != $page['total'] - $page['crumbs'] - 1) {
 					$pages[] = [
 						'separator' => true,
 						'name' => ' ... ',
 					];
 				}
 				$pages[] = [
-					'page' => $pg_cnt,
-					'title' => $pg_cnt . ' страница',
-					'name' => $pg_cnt,
+					'page' => $page['total'],
+					'title' => $page['total'] . ' страница',
+					'name' => $page['total'],
 				];
 			}
-			if ($page['current'] != $pg_cnt) {
+			if ($page['current'] != $page['total']) {
 				$pages[] = [
 					'page' => $page['current'] + 1,
 					'title' => 'Следующая',
@@ -173,7 +172,7 @@ class Librator {
 	 * @param  string  $separator разделитель
 	 * @return array              массив строк
 	 */
-	public function explode($text, $limit, $separator)
+	protected function explode($text, $limit, $separator)
 	{
 		$lines = [];
 		$array = [];
