@@ -10,6 +10,8 @@
 
 namespace Visavi;
 
+use Visavi\Paginator as Paginator;
+
 class Librator {
 
 	public static $filename;
@@ -36,7 +38,7 @@ class Librator {
 
 		$page = ['total' => count($file), 'current' => $this->currentPage()];
 
-		return nl2br($string).self::pagination($page);
+		return nl2br($string).Paginator::pagination($page);
 	}
 
 	/**
@@ -53,7 +55,7 @@ class Librator {
 	 */
 	public function currentPage()
 	{
-		return ! empty($_GET['page']) ? abs(intval($_GET['page'])) : 1;
+		return Paginator::currentPage();
 	}
 
 	/**
@@ -69,79 +71,6 @@ class Librator {
 		}
 
 		return 	self::$_file;
-	}
-
-	/**
-	 * Постраничная навигация
-	 * @param  array $page Массив данных
-	 * @return string      Сформированный блок с кнопками страниц
-	 */
-	protected static function pagination($page)
-	{
-		if ($page['total'] > 0) {
-			if (empty($page['crumbs'])) $page['crumbs'] = 3;
-
-			$pages = [];
-			$idx_fst = max($page['current'] - $page['crumbs'], 1);
-			$idx_lst = min($page['current'] + $page['crumbs'], $page['total']);
-
-			if ($page['current'] != 1) {
-				$pages[] = [
-					'page' => $page['current'] - 1,
-					'title' => 'Предыдущая',
-					'name' => '«',
-				];
-			}
-			if ($page['current'] > $page['crumbs'] + 1) {
-				$pages[] = [
-					'page' => 1,
-					'title' => '1 страница',
-					'name' => 1,
-				];
-				if ($page['current'] != $page['crumbs'] + 2) {
-					$pages[] = [
-						'separator' => true,
-						'name' => ' ... ',
-					];
-				}
-			}
-			for ($i = $idx_fst; $i <= $idx_lst; $i++) {
-				if ($i == $page['current']) {
-					$pages[] = [
-						'current' => true,
-						'name' => $i,
-					];
-				} else {
-					$pages[] = [
-						'page' => $i,
-						'title' => $i.' страница',
-						'name' => $i,
-					];
-				}
-			}
-			if ($page['current'] < $page['total'] - $page['crumbs']) {
-				if ($page['current'] != $page['total'] - $page['crumbs'] - 1) {
-					$pages[] = [
-						'separator' => true,
-						'name' => ' ... ',
-					];
-				}
-				$pages[] = [
-					'page' => $page['total'],
-					'title' => $page['total'] . ' страница',
-					'name' => $page['total'],
-				];
-			}
-			if ($page['current'] != $page['total']) {
-				$pages[] = [
-					'page' => $page['current'] + 1,
-					'title' => 'Следующая',
-					'name' => '»',
-				];
-			}
-
-			return self::render('pagination', compact('pages'));
-		}
 	}
 
 	/**

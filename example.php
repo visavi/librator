@@ -1,5 +1,6 @@
 <?php
-	include 'src/Librator.php';
+	require 'vendor/autoload.php';
+
 	$librator = new Visavi\Librator('library.txt');
 	$text = $librator->read(20);
 	//$text = $librator->read(2000, 'chars');
