@@ -14,7 +14,7 @@
 		"php": ">=5.4.0",
 		"visavi/paginator": "dev-master"
 	},
-	"minimum-stability": "stable",
+	"minimum-stability": "dev",
 	"autoload": {
 		"psr-4": {
 			"Visavi\\": "src/"
