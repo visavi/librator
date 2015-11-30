@@ -12,9 +12,9 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"visavi/paginator": "dev-master"
+		"visavi/paginator": "~1.0"
 	},
-	"minimum-stability": "dev",
+	"minimum-stability": "stable",
 	"autoload": {
 		"psr-4": {
 			"Visavi\\": "src/"
