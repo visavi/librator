@@ -30,13 +30,12 @@ class Librator {
 	 */
 	public function read($limit, $separator = 'lines')
 	{
+		$page = $this->currentPage();
 		$file = $this->prepareFile($limit, $separator);
 
-		$page = $this->currentPage();
+		$string = isset($file[$page - 1]) ? $file[$page - 1] : end($file);
 
-		$string = $file[$page - 1];
-
-		$page = ['total' => count($file), 'current' => $this->currentPage()];
+		$page = ['total' => count($file), 'current' => $this->currentPage(), 'limit' => 1];
 
 		return nl2br($string).Paginator::pagination($page);
 	}
@@ -55,7 +54,7 @@ class Librator {
 	 */
 	public function currentPage()
 	{
-		return Paginator::currentPage();
+		return Paginator::getCurrentPage();
 	}
 
 	/**

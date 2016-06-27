@@ -12,7 +12,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title><?= $title ?></title>
-		<link href="/src/css/style.css" rel="stylesheet">
+		<link href="/vendor/visavi/paginator/src/css/bootstrap.css" rel="stylesheet">
 	</head>
 	<body>
 		<h1><?= $title ?></h1>

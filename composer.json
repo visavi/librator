@@ -12,7 +12,7 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"visavi/paginator": "~1.0"
+		"visavi/paginator": "~1.1"
 	},
 	"minimum-stability": "stable",
 	"autoload": {
